@@ -1,1 +1,3 @@
 event.json
+.nvmrc
+functions/*/index.js

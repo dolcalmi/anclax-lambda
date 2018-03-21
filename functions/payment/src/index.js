@@ -6,7 +6,6 @@ exports.handle = function(e, ctx, cb) {
   var sourceSecretKey = e.sourceSecretKey
   var receiverPublicKey = e.receiverPublicKey
   var amount = e.amount
-  var memo = e.memo
 
   var sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecretKey);
   var sourcePublicKey = sourceKeypair.publicKey();
@@ -19,7 +18,6 @@ exports.handle = function(e, ctx, cb) {
             asset,
             amount
           }))
-          .addMemo(StellarSdk.Memo.hash(memo))
           .build();
 
       transaction.sign(sourceKeypair);
@@ -33,11 +31,11 @@ exports.handle = function(e, ctx, cb) {
         .catch(function(err) {
           console.log(err);
 
-          cb(err)
+          cb(JSON.stringify(err))
         });
     })
     .catch(function(e) {
       console.error(e);
-      cb(e)
+      cb("err loading account")
     });
 }
