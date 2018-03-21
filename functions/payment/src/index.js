@@ -1,6 +1,6 @@
 const StellarSdk = require('stellar-sdk')
-const server = require('./server')
-const asset = require('./asset')
+const server = require('../../../lib/server')
+const asset = require('../../../lib/asset')
 
 exports.handle = function(e, ctx, cb) {
   var sourceSecretKey = e.sourceSecretKey
