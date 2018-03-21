@@ -1,0 +1,8 @@
+{
+  "name": "anclax",
+  "description": "",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::201246010122:role/anclax_lambda_function",
+  "environment": {}
+}
