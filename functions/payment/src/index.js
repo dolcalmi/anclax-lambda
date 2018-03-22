@@ -2,7 +2,7 @@ const StellarSdk = require('stellar-sdk')
 const server = require('../../../lib/server')
 const asset = require('../../../lib/asset')
 
-exports.handle = function(e, ctx, cb) {
+export default function(e, ctx, cb) {
   var sourceSecretKey = e.sourceSecretKey
   var receiverPublicKey = e.receiverPublicKey
   var amount = e.amount
