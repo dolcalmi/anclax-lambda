@@ -4,12 +4,27 @@ import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
 
-export async function createAccount(e) {
+export async function createAccount({ destination }) {
   const issuingKeys = StellarSdk.Keypair.fromSecret('SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X')
 
-  const account = await server.loadAccount(issuingKeys.publicKey())
+  const issuingAccount = await server.loadAccount(issuingKeys.publicKey())
 
-  return { account }
+  console.log('creating account', destination)
+
+  const transaction = new StellarSdk.
+        TransactionBuilder(issuingAccount)
+        .addOperation(
+          StellarSdk.Operation.createAccount({
+            destination,
+            startingBalance: '2.6'
+          })
+        ).build()
+
+  transaction.sign(issuingKeys)
+
+  const result = await server.submitTransaction(transaction);
+
+  return { result }
 }
 
 export default apex(e => {

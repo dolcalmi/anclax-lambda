@@ -1,3 +1,4 @@
 event.json
 .nvmrc
 functions/*/index.js
+lambda-event-*.json
