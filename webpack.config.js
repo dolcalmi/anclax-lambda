@@ -2,7 +2,7 @@ const path = require('path')
 const Webpack = require('webpack')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: ['@babel/polyfill', './src/index.js'],
   target: 'node',
   output: {
     path: path.resolve(process.cwd()),
@@ -21,6 +21,5 @@ module.exports = {
         exclude: [/node_modules/],
       },
     ]
-  },
-  stats: 'errors-only'
+  }
 }

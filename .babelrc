@@ -1,5 +1,9 @@
 {
   "presets": [
-    "env"
+    "env",
+    "es2017"
+  ],
+  "plugins": [
+    "transform-async-to-generator"
   ]
 }
