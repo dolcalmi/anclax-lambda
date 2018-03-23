@@ -1,41 +1,29 @@
-const StellarSdk = require('stellar-sdk')
-const server = require('../../../lib/server')
-const asset = require('../../../lib/asset')
+import apex from 'apex.js'
+import StellarSdk  from 'stellar-sdk'
 
-export default function(e, ctx, cb) {
-  var sourceSecretKey = e.sourceSecretKey
-  var receiverPublicKey = e.receiverPublicKey
-  var amount = e.amount
+import server from '../../../lib/server'
+import asset from '../../../lib/asset'
 
-  var sourceKeypair = StellarSdk.Keypair.fromSecret(sourceSecretKey)
-  var sourcePublicKey = sourceKeypair.publicKey()
+export async function pay({ signerSecret , sourcePublicKey, receiverPublicKey, amount }) {
+  const sourceKeypair = StellarSdk.Keypair.fromSecret(signerSecret)
+  const account = await server.loadAccount(sourcePublicKey)
 
-  server.loadAccount(sourcePublicKey)
-    .then(function(account) {
-      var transaction = new StellarSdk.TransactionBuilder(account)
-          .addOperation(StellarSdk.Operation.payment({
-            destination: receiverPublicKey,
-            asset,
-            amount
-          }))
-          .build()
-
-      transaction.sign(sourceKeypair)
-
-      server.submitTransaction(transaction)
-        .then(function(transactionResult) {
-          console.log(JSON.stringify(transactionResult, null, 2))
-
-          cb(null, transactionResult)
+  const transaction = new StellarSdk.TransactionBuilder(account)
+      .addOperation(
+        StellarSdk.Operation.payment({
+          destination: receiverPublicKey,
+          asset,
+          amount
         })
-        .catch(function(err) {
-          console.log(err)
+      ).build()
 
-          cb(JSON.stringify(err))
-        })
-    })
-    .catch(function(e) {
-      console.error(e)
-      cb(JSON.stringify(e))
-    })
+  transaction.sign(sourceKeypair)
+
+  const result = await server.submitTransaction(transaction)
+
+  return { result }
 }
+
+export default apex(e => {
+  return pay(e);
+})
