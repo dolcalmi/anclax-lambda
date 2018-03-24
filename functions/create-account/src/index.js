@@ -3,9 +3,11 @@ import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
+import sns from '../../../lib/sns'
 
-export async function createAccount({ destination }) {
-  const issuingKeys = StellarSdk.Keypair.fromSecret('SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X')
+
+export async function createAccount({ destination }, { awsRequestId }) {
+  const issuingKeys = StellarSdk.Keypair.fromSecret(process.env.IssuingKeys)
 
   const issuingAccount = await server.loadAccount(issuingKeys.publicKey())
 
@@ -22,11 +24,29 @@ export async function createAccount({ destination }) {
 
   transaction.sign(issuingKeys)
 
-  const result = await server.submitTransaction(transaction);
+  try {
+    const result = await server.submitTransaction(transaction);
 
-  return { result }
+    const snsResult = await sns.publish({
+      Message: JSON.stringify({
+        text: `<!here> :+1: New account created ${destination}`
+      }),
+      TopicArn: process.env.SlackTopicArn
+    })
+
+    return { result, snsResult }
+  } catch (e) {
+    await sns.publish({
+      Message: JSON.stringify({
+        text: `<!everyone> :warning: Account creation failed ${destination} - Lambda ID: ${awsRequestId}`
+      }),
+      TopicArn: process.env.SlackTopicArn
+    })
+
+    throw e
+  }
 }
 
-export default apex(e => {
-  return createAccount(e);
+export default apex((e, c) => {
+  return createAccount(e, c);
 })

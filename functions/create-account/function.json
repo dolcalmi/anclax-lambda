@@ -1,3 +1,7 @@
 {
-  "timeout": 30
+  "timeout": 30,
+  "environment": {
+    "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message",
+    "IssuingKeys": "SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X"
+  }
 }
