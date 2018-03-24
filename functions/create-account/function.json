@@ -2,6 +2,8 @@
   "timeout": 30,
   "environment": {
     "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message",
-    "IssuingKeys": "SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X"
+    "BuildTrustTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-build-trust",
+    "IssuingKeys": "SBQWY3DNPFWGSZTFNV4WQZLBOJ2GQYLTMJSWK3TTMVQXEY3INFXGO52X",
+    "KMSKey": "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
   }
 }
