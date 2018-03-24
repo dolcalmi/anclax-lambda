@@ -22,8 +22,6 @@ async function allowTrust(trustor, awsRequestId) {
     })
   } catch (e) {
     sendMessageToSlack(`<!everyone> :warning: sns-allow-trust failed ${trustor} - Lambda ID: ${awsRequestId}`)
-
-    throw e
   }
 }
 
@@ -66,13 +64,13 @@ export async function buildTrust({ secret }, { awsRequestId }) {
 
     transaction.sign(trusterKeys)
 
-    await server.submitTransaction(transaction)
+    const result = await server.submitTransaction(transaction)
 
     console.log('trustline created from  account to issuer and signers updated')
-    await Promise.all([
-      sendMessageToSlack(`<!here> :+1: Change trust and Set Options set for ${trusterKeys.publicKey()}`),
-      allowTrust(trusterKeys.publicKey(), awsRequestId)
-    ])
+
+    await sendMessageToSlack(`<!here> :+1: Change trust and Set Options set for ${trusterKeys.publicKey()}`)
+    await allowTrust(trusterKeys.publicKey(), awsRequestId)
+
 
     return { result }
   } catch(e) {

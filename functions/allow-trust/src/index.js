@@ -6,7 +6,7 @@ import asset from '../../../lib/asset'
 
 import { sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 
-const authSeed = process.env.AUTHSEED
+const authSeed = process.env.COPAuthSeed
 
 export async function allowTrust({ trustor }, { awsRequestId }) {
   try {
@@ -34,7 +34,7 @@ export async function allowTrust({ trustor }, { awsRequestId }) {
 
     return { result }
   } catch(e) {
-    console.log(`failure ${JSON.stringify(e)}`)
+    console.log(`failure ${e}`)
 
     await sendMessageToSlack(`<!everyone> :warning: Allow trust failed ${trustor} - Lambda ID: ${awsRequestId}`)
 
