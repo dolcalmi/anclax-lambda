@@ -2,9 +2,9 @@
 import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
+import extractSnsMessage from '../../../lib/extract-sns-message'
 import server from '../../../lib/server'
 import sns from '../../../lib/sns'
-
 
 export async function createAccount({ destination }, { awsRequestId }) {
   const issuingKeys = StellarSdk.Keypair.fromSecret(process.env.IssuingKeys)
@@ -48,5 +48,5 @@ export async function createAccount({ destination }, { awsRequestId }) {
 }
 
 export default apex((e, c) => {
-  return createAccount(e, c);
+  return createAccount(extractSnsMessage(e), c);
 })
