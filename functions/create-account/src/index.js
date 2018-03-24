@@ -2,28 +2,9 @@
 import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
-import extractSnsMessage from '../../../lib/extract-sns-message'
 import server from '../../../lib/server'
-import sns from '../../../lib/sns'
+import { sendToSns, sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 import decrypt from '../../../lib/decrypt'
-
-async function sendToSns(params) {
-  await sns.publish(params)
-}
-
-async function sendMessageToSlack(text) {
-  try {
-    await sendToSns({
-      Message: JSON.stringify({
-        text
-      }),
-      TopicArn: process.env.SlackTopicArn
-    })
-
-  } catch(e) {
-    console.log('slack-notification-failed')
-  }
-}
 
 async function buildTrust(secret, newAccount, awsRequestId) {
   try {
@@ -71,12 +52,7 @@ export async function createAccount({ secret }, { awsRequestId }) {
 
     return { result }
   } catch (e) {
-    await sns.publish({
-      Message: JSON.stringify({
-        text: `<!everyone> :warning: Account creation failed ${newAccount.publicKey()} - Lambda ID: ${awsRequestId}`
-      }),
-      TopicArn: process.env.SlackTopicArn
-    })
+    await sendMessageToSlack(`<!everyone> :warning: Account creation failed ${newAccount.publicKey()} - Lambda ID: ${awsRequestId}`)
 
     throw e
   }

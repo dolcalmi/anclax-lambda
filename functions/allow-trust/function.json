@@ -1,0 +1,7 @@
+{
+  "timeout": 20,
+  "environment": {
+    "AUTHSEED": "SAI6P3GVU4DN3T5STJLTJWRSKA5LP36P2DEK2SPPSIN5CLXIWWCGY5S2",
+    "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message"
+  }
+}
