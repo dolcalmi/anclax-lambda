@@ -3,10 +3,15 @@ import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
 import asset from '../../../lib/asset'
+import { sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 
-export async function pay({ signerSecret , sourcePublicKey, receiverPublicKey, amount }) {
-  const sourceKeypair = StellarSdk.Keypair.fromSecret(signerSecret)
+const paymentsSecret = process.env.PaymentsSecret
+
+export async function pay({ sourcePublicKey, receiverPublicKey, amount }, { awsRequestId }) {
+  const signerKeys = StellarSdk.Keypair.fromSecret(paymentsSecret)
   const account = await server.loadAccount(sourcePublicKey)
+
+  console.log(`new payment from  ${sourcePublicKey} to ${receiverPublicKey}`)
 
   const transaction = new StellarSdk.TransactionBuilder(account)
       .addOperation(
@@ -17,13 +22,27 @@ export async function pay({ signerSecret , sourcePublicKey, receiverPublicKey, a
         })
       ).build()
 
-  transaction.sign(sourceKeypair)
+  transaction.sign(signerKeys)
 
-  const result = await server.submitTransaction(transaction)
+  try {
+    const result = await server.submitTransaction(transaction)
 
-  return { result }
+    try {
+      await sendMessageToSlack(`<!here> :+1: New paymeny from ${sourcePublicKey} to ${receiverPublicKey} - amount: ${amount}`)
+    } catch(e) {
+      console.log(`slack notification failure ${e}`)
+    }
+
+    return { result }
+  } catch(e) {
+    console.log(`failure ${e}`)
+
+    await sendMessageToSlack(`<!everyone> :warning: payment failed from ${sourcePublicKey} to ${receiverPublicKey} - Lambda ID: ${awsRequestId}`)
+
+    throw e
+  }
 }
 
-export default apex(e => {
-  return pay(e);
+export default apex((e, c) => {
+  return pay(extractSnsMessage(e), c)
 })
