@@ -28,7 +28,7 @@ export async function pay({ sourcePublicKey, receiverPublicKey, amount }, { awsR
     const result = await server.submitTransaction(transaction)
 
     try {
-      await sendMessageToSlack(`<!here> :+1: New paymeny from ${sourcePublicKey} to ${receiverPublicKey} - amount: ${amount}`)
+      await sendMessageToSlack(`<!here> :+1: New payment from ${sourcePublicKey} to ${receiverPublicKey} - amount: ${amount}`)
     } catch(e) {
       console.log(`slack notification failure ${e}`)
     }
