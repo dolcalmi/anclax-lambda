@@ -1,0 +1,9 @@
+{
+  "timeout": 30,
+  "environment": {
+    "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message-testnet",
+    "BuildTrustTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-build-trust-testnet",
+    "IssuingKeys": "SET_ME",
+    "KMSKey": "SET_ME"
+  }
+}
