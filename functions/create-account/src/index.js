@@ -36,7 +36,7 @@ export async function createAccount({ secret }, { awsRequestId }) {
         .addOperation(
           StellarSdk.Operation.createAccount({
             destination: newAccount.publicKey(),
-            startingBalance: '2.6'
+            startingBalance: '2.51'
           })
         ).build()
 
