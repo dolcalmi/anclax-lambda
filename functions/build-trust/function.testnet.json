@@ -1,10 +1,3 @@
 {
-  "timeout": 20,
-  "environment": {
-    "PAYMENTS_PUBKEY": "SET_ME_IN_AWS",
-    "ADMIN_PUBKEY": "SET_ME_IN_AWS",
-    "KMSKey": "SET_ME",
-    "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message-testnet",
-    "AllowTrustTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-allow-trust-testnet"
-  }
+  "timeout": 20
 }
