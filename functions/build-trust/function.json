@@ -1,8 +1,8 @@
 {
   "timeout": 20,
   "environment": {
-    "PAYMENTS_PUBKEY": "GC2V5RGEY4VXULXC2UGITK4NY6HTTKHGWR4SO35GCJPOZYVVX6JPISEV",
-    "ADMIN_PUBKEY": "GBJUHLLLJJA6LX62UAF7NCFEZHSUM77CFGVXC7FBVTK2VTT6QPBALBCE",
+    "PAYMENTS_PUBKEY": "SET_ME_IN_AWS",
+    "ADMIN_PUBKEY": "SET_ME_IN_AWS",
     "KMSKey": "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
     "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message",
     "AllowTrustTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-allow-trust"

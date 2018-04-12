@@ -1,7 +1,7 @@
 {
   "timeout": 20,
   "environment": {
-    "PaymentsSecret": "SC6IGBU2DZDGRMVSYNSV6OU5L5IYJIFABPIPSPWJV3V6X4LS22MBLBRA",
+    "PaymentsSecret": "SET_ME_IN_AWS",
     "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message"
   }
 }
