@@ -6,7 +6,7 @@ import { sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 
 const paymentsSecret = process.env.PaymentSecret
 
-export async function pay({ sourcePublicKey, receiverPublicKey, amount, assetInfo }, { awsRequestId }) {
+export async function pay({ sourcePublicKey, receiverPublicKey, amount, assetInfo, memo }, { awsRequestId }) {
   const asset  = new StellarSdk.Asset(
     assetInfo.code,
     assetInfo.issuer
@@ -17,13 +17,15 @@ export async function pay({ sourcePublicKey, receiverPublicKey, amount, assetInf
 
   console.log(`new payment from  ${sourcePublicKey} to ${receiverPublicKey}`)
 
-  const transaction = new StellarSdk.TransactionBuilder(account)
+  let transaction = new StellarSdk.TransactionBuilder(account)
       .addOperation(
         StellarSdk.Operation.payment({
           destination: receiverPublicKey,
           asset,
           amount
         })
+      ).addMemo(
+        StellarSdk.Memo.hash(memo)
       ).build()
 
   transaction.sign(signerKeys)
