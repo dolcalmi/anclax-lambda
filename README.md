@@ -6,11 +6,34 @@
 apex invoke payment < event.json
 ```
 
-### Account creation flow
+### Account creation flow + deployment instructions
 
 1. create_account
+
+```
+apex deploy create-account --env=testnet --env-file=env.json
+```
+
 2. buildTrust
+
+```
+apex deploy build-trust --env=testnet --env-file=env1.json
+```
+
 3. AllowTrustTopicArn
+
+```
+apex deploy allow-trust --env=testnet --env-file=env2.json
+```
+
+### Payment
+
+4. payment
+
+```
+apex deploy payment --env=testnet --env-file=env3.json
+```
+
 
 
 ### Payment flow
@@ -62,7 +85,7 @@ And then for deployment do `apex deploy --env-file functions/function-name/env.j
 
 ```
  {
-    "COPAuthSeed": "SEED FOR ACCOUNT WITH ENOUGH PERMISSION TO SET TRUSTLINE",
+    "AuthSeed": "SEED FOR ACCOUNT WITH ENOUGH PERMISSION TO SET TRUSTLINE",
     "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message-testnet"
  }
 ```
@@ -71,7 +94,7 @@ And then for deployment do `apex deploy --env-file functions/function-name/env.j
 
 ```
 {
-  "PaymentsSecret": "seed with permission to make payments on behalf of users",
+  "PaymentSecret": "seed with permission to make payments on behalf of users",
   "SlackTopicArn": "arn:aws:sns:us-east-1:201246010122:a-production-anclax-sns-slack-message-testnet"
 }
 ```

@@ -5,3 +5,4 @@ lambda-event-*.json
 sandbox.js
 functions/*/env.json
 env.json
+env*.json
