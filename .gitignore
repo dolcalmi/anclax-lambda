@@ -4,3 +4,4 @@ functions/*/index.js
 lambda-event-*.json
 sandbox.js
 functions/*/env.json
+env.json
