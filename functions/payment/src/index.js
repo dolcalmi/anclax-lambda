@@ -2,12 +2,16 @@ import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
-import asset from '../../../lib/asset'
 import { sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 
-const paymentsSecret = process.env.PaymentsSecret
+const paymentsSecret = process.env.PaymentSecret
 
-export async function pay({ sourcePublicKey, receiverPublicKey, amount }, { awsRequestId }) {
+export async function pay({ sourcePublicKey, receiverPublicKey, amount, assetInfo }, { awsRequestId }) {
+  const asset  = new StellarSdk.Asset(
+    assetInfo.code,
+    assetInfo.issuer
+  )
+
   const signerKeys = StellarSdk.Keypair.fromSecret(paymentsSecret)
   const account = await server.loadAccount(sourcePublicKey)
 
@@ -28,7 +32,7 @@ export async function pay({ sourcePublicKey, receiverPublicKey, amount }, { awsR
     const result = await server.submitTransaction(transaction)
 
     try {
-      await sendMessageToSlack(`<!here> :+1: New payment from ${sourcePublicKey} to ${receiverPublicKey} - amount: ${amount}`)
+      await sendMessageToSlack(`<!here> :+1: New payment from ${sourcePublicKey} to ${receiverPublicKey} - amount: ${amount} - asset: ${assetInfo.code}`)
     } catch(e) {
       console.log(`slack notification failure ${e}`)
     }

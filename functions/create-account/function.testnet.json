@@ -1,3 +1,11 @@
 {
-  "timeout": 30
+  "timeout": 30,
+  "environment": {
+    "SlackTopicArn": "",
+    "BuildTrustTopicArn": "",
+    "IssuingKeys": "Seed for account with enough lumens to create other accounts",
+    "KMSKey": "arn for KMS",
+    "Testnet": "true"
+}
+  }
 }

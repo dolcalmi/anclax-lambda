@@ -6,11 +6,12 @@ import server from '../../../lib/server'
 import { sendToSns, sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 import decrypt from '../../../lib/decrypt'
 
-async function buildTrust(secret, newAccount, awsRequestId) {
+async function buildTrust(secret, assetInfo, newAccount, awsRequestId) {
   try {
     await sendToSns({
       Message: JSON.stringify({
-        secret
+        secret,
+        assetInfo
       }),
       TopicArn: process.env.BuildTrustTopicArn
     })
@@ -21,7 +22,7 @@ async function buildTrust(secret, newAccount, awsRequestId) {
   }
 }
 
-export async function createAccount({ secret }, { awsRequestId }) {
+export async function createAccount({ secret, assetInfo }, { awsRequestId }) {
   const accountSecret = await decrypt(secret)
 
   const issuingKeys = StellarSdk.Keypair.fromSecret(process.env.IssuingKeys)
@@ -46,7 +47,7 @@ export async function createAccount({ secret }, { awsRequestId }) {
     const result = await server.submitTransaction(transaction);
 
     await Promise.all([
-      buildTrust(secret, newAccount, awsRequestId),
+      buildTrust(secret, assetInfo, newAccount, awsRequestId),
       sendMessageToSlack(`<!here> :+1: New account created ${newAccount.publicKey()}`)
     ])
 

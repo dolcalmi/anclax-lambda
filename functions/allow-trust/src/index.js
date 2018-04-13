@@ -2,14 +2,18 @@ import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
-import asset from '../../../lib/asset'
 
 import { sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 
-const authSeed = process.env.COPAuthSeed
+const authSeed = process.env.AuthSeed
 
-export async function allowTrust({ trustor }, { awsRequestId }) {
+export async function allowTrust({ trustor, assetInfo }, { awsRequestId }) {
   try {
+    const asset  = new StellarSdk.Asset(
+      assetInfo.code,
+      assetInfo.issuer
+    )
+
     const issuingKeys = StellarSdk.Keypair.fromSecret(authSeed)
     const issuingAccount = await server.loadAccount(asset.issuer)
     const transaction = new StellarSdk.TransactionBuilder(issuingAccount)
@@ -30,7 +34,7 @@ export async function allowTrust({ trustor }, { awsRequestId }) {
 
     console.log(`${trustor} trusted`)
 
-    await sendMessageToSlack(`<!here> :+1: ${trustor} is now trusted to hold COP`)
+    await sendMessageToSlack(`<!here> :+1: ${trustor} is now trusted to hold ${assetInfo.code} issued by ${assetInfo.issuer}`)
 
     return { result }
   } catch(e) {

@@ -3,7 +3,6 @@ import apex from 'apex.js'
 import StellarSdk  from 'stellar-sdk'
 
 import server from '../../../lib/server'
-import asset from '../../../lib/asset'
 
 import { sendToSns, sendMessageToSlack, extractSnsMessage  } from '../../../lib/utils'
 import decrypt from '../../../lib/decrypt'
@@ -12,11 +11,12 @@ const paymentsPkey = process.env['PAYMENTS_PUBKEY']
 const adminPkey = process.env['ADMIN_PUBKEY']
 const authSeed = process.env['AUTH_SEED']
 
-async function allowTrust(trustor, awsRequestId) {
+async function allowTrust(trustor, assetInfo, awsRequestId) {
   try {
     await sendToSns({
       Message: JSON.stringify({
-        trustor
+        trustor,
+        assetInfo
       }),
       TopicArn: process.env.AllowTrustTopicArn
     })
@@ -25,8 +25,13 @@ async function allowTrust(trustor, awsRequestId) {
   }
 }
 
-export async function buildTrust({ secret }, { awsRequestId }) {
+export async function buildTrust({ secret, assetInfo }, { awsRequestId }) {
   try {
+    const asset  = new StellarSdk.Asset(
+      assetInfo.code,
+      assetInfo.issuer
+    )
+
     const accountSecret = await decrypt(secret)
 
     var trusterKeys = StellarSdk.Keypair.fromSecret(accountSecret);
@@ -68,8 +73,8 @@ export async function buildTrust({ secret }, { awsRequestId }) {
 
     console.log('trustline created from  account to issuer and signers updated')
 
-    await sendMessageToSlack(`<!here> :+1: Change trust and Set Options set for ${trusterKeys.publicKey()}`)
-    await allowTrust(trusterKeys.publicKey(), awsRequestId)
+    await sendMessageToSlack(`<!here> :+1: Change trust and set Options set for ${trusterKeys.publicKey()} - trusting ${assetInfo.code} issued by ${assetInfo.issuer}`)
+    await allowTrust(trusterKeys.publicKey(), assetInfo, awsRequestId)
 
 
     return { result }
