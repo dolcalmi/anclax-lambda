@@ -55,15 +55,15 @@ export async function buildTrust({ secret, assetInfo }, { awsRequestId }) {
           StellarSdk.Operation.setOptions({
             signer: {
               ed25519PublicKey: adminPkey,
-              weight: 3
+              weight: 5
             }
           }))
         .addOperation(
           StellarSdk.Operation.setOptions({
-            masterWeight: 1, // set master key weight to 0
+            masterWeight: 0, // set master key weight to 1
             lowThreshold: 1,
             medThreshold: 2,
-            highThreshold: 3
+            highThreshold: 5
           }))
         .build();
 
