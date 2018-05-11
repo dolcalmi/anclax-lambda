@@ -6,6 +6,5 @@
     "IssuingKeys": "Seed for account with enough lumens to create other accounts",
     "KMSKey": "arn for KMS",
     "Testnet": "true"
-}
   }
 }
